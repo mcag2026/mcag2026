@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MCAG 2026 – Success Criterion Detail</title>
+  <link rel="stylesheet" href="./styles.css" />
+      <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/androidstudio.min.css"
+  />
+</head>
+<body>
+<div id="app" class="app">
+  <main class="content-wrapper">
+    <section class="page" v-if="sc">
+      <p style="margin-bottom: 1rem;">
+        <a href="index.html">← Back to overview</a>
+      </p>
+
+      <h1>{{ sc.title }}</h1>
+
+      <p class="section-lead" v-if="guideline && section">
+        {{ guideline.heading }} · {{ section.navLabel }}
+      </p>
+
+      <!-- Definition -->
+      <h2>Definition</h2>
+      <p v-if="sc.definition">{{ sc.definition }}</p>
+      <p v-else class="placeholder">Definition coming soon.</p>
+
+      <!-- WCAG Reference -->
+      <h2>WCAG Reference</h2>
+      <ul v-if="sc.references && sc.references.length">
+        <li v-for="ref in sc.references" :key="ref.label">
+          <a
+            v-if="ref.url"
+            :href="ref.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ ref.label }}
+          </a>
+          <span v-else>{{ ref.label }}</span>
+        </li>
+      </ul>
+      <p v-else class="placeholder">WCAG references coming soon.</p>
+
+      <!-- Issue Example -->
+      <h2>Issue Example</h2>
+      <div v-if="sc.issueExample">
+        <div
+          v-if="sc.issueExample.screenshotUrl"
+          style="margin-bottom: 0.75rem;"
+        >
+          <img
+            :src="sc.issueExample.screenshotUrl"
+            alt=""
+            style="max-width: 100%; border: 1px solid #ccc; border-radius: 4px;"
+          />
+        </div>
+        <p
+          v-for="(para, idx) in sc.issueExample.description || []"
+          :key="'issue-para-' + idx"
+        >
+          {{ para }}
+        </p>
+        <p
+          v-if="!sc.issueExample.description || !sc.issueExample.description.length"
+          class="placeholder"
+        >
+          Issue description coming soon.
+        </p>
+      </div>
+      <p v-else class="placeholder">Issue example coming soon.</p>
+
+    <!-- Fix Suggestions -->
+    <h2>Android Fix Suggestion</h2>
+    <div
+      v-if="sc.fixSuggestions && sc.fixSuggestions.length"
+      class="fix-suggestions"
+    >
+      <article
+        v-for="(fix, fixIndex) in sc.fixSuggestions"
+        :key="fix.id || fix.title"
+        class="fix-block"
+      >
+        <!-- Fix type heading -->
+        <h3>Fix type {{ fixIndex + 1 }}: {{ fix.title }}</h3>
+        <p v-if="fix.category" class="placeholder fix-type-label">
+          {{ fix.category }} fix
+        </p>
+
+        <!-- Variant 1: the main fix -->
+        <section
+          class="fix-variant"
+        >
+          <p><strong>Fix {{ fixIndex + 1 }}.1 — {{ fix.title }}</strong></p>
+
+          <div v-if="fix.screenshotUrl" style="margin-bottom: 0.75rem;">
+            <img
+              :src="fix.screenshotUrl"
+              alt=""
+              style="max-width: 100%; border: 1px solid #ccc; border-radius: 4px;"
+            />
+          </div>
+
+          <p
+            v-for="(para, idx) in fix.description || []"
+            :key="'fix-desc-main-' + (fix.id || fix.title) + '-' + idx"
+          >
+            {{ para }}
+          </p>
+
+          <div
+            v-if="fix.codeSnippets && fix.codeSnippets.length"
+            style="margin-top: 0.75rem;"
+          >
+            <div
+              v-for="(snippet, sIdx) in fix.codeSnippets"
+              :key="'code-main-' + (fix.id || fix.title) + '-' + sIdx"
+            >
+              <p v-if="snippet.label"><strong>{{ snippet.label }}</strong></p>
+                <pre class="code-block">
+                  <code :class="codeLanguage(snippet)">{{ snippet.code }}</code>
+                </pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Additional variants (what we previously called sub-fixes) -->
+        <section
+          v-for="(sub, sIdx) in fix.subFixes || []"
+          :key="sub.id || sub.title"
+          class="fix-variant"
+        >
+          <p>
+            <strong>
+              Fix {{ fixIndex + 1 }}.{{ sIdx + 2 }} — {{ sub.title }}
+            </strong>
+          </p>
+            <p v-if="sub.category" class="placeholder fix-type-label">
+              {{ sub.category }} fix
+            </p>
+
+
+          <div v-if="sub.screenshotUrl" style="margin-bottom: 0.75rem;">
+            <img
+              :src="sub.screenshotUrl"
+              alt=""
+              style="max-width: 100%; border: 1px solid #ccc; border-radius: 4px;"
+            />
+          </div>
+
+          <p
+            v-for="(para, idx) in sub.description || []"
+            :key="'subfix-desc-' + (sub.id || sub.title) + '-' + idx"
+          >
+            {{ para }}
+          </p>
+
+          <div
+            v-if="sub.codeSnippets && sub.codeSnippets.length"
+            style="margin-top: 0.75rem;"
+          >
+            <div
+              v-for="(snippet, sIdx) in sub.codeSnippets"
+              :key="'sub-code-' + (sub.id || sub.title) + '-' + sIdx"
+            >
+              <p v-if="snippet.label">
+                <strong>{{ snippet.label }}</strong>
+              </p>
+                <pre class="code-block">
+                  <code :class="codeLanguage(snippet)">{{ snippet.code }}</code>
+                </pre>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+    <p v-else class="placeholder">Fix suggestions coming soon.</p>
+
+      <!-- Resources -->
+      <h2>Resources</h2>
+      <div
+        class="card"
+        v-if="sc.resources && sc.resources.length"
+      >
+        <div
+          v-for="resource in sc.resources"
+          :key="resource.id"
+          class="card-block"
+        >
+          <button
+            class="card-toggle"
+            type="button"
+            :aria-expanded="resource.open ? 'true' : 'false'"
+            @click="resource.open = !resource.open"
+          >
+            {{ resource.title }}
+          </button>
+          <div class="card-section" v-show="resource.open">
+            <ul>
+              <li v-for="(item, idx) in resource.items" :key="idx">
+                {{ item }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p v-else class="placeholder">
+        Resources coming soon.
+      </p>
+    </section>
+
+    <section v-else class="page">
+      <p>Error: Success Criterion not found.</p>
+      <a href="index.html">Return to overview</a>
+    </section>
+  </main>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<!-- Highlight.js core + Java/Kotlin languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+<script type="module" src="./js/app-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MCAG 2026</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div id="app" class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Table of contents">
+    <div class="sidebar-header">Table of Contents</div>
+<ul class="toc">
+  <li v-for="sec in sections" :key="sec.id">
+    <button
+      class="toc-link"
+      :class="{ active: sec.id === section.id }"
+      @click="goSection(sec.id)"
+    >
+      {{ sec.navLabel }}
+    </button>
+
+    <ul
+      class="toc-sublist"
+      v-if="sec.id === section.id && section.guidelines && section.guidelines.length"
+    >
+      <li v-for="guideline in section.guidelines" :key="guideline.id">
+        <a
+          class="toc-sublink"
+          :href="'#' + guideline.id"
+        >
+          {{ guideline.navLabel }}
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
+  </aside>
+
+  <!-- Main content -->
+  <main class="content-wrapper">
+    <section class="page" v-if="section">
+      <h1>{{ section.heading }}</h1>
+      <p class="section-lead" v-if="section.intro">
+        {{ section.intro }}
+      </p>
+
+      <!-- Guidelines within the active principle -->
+      <section
+        v-for="guideline in section.guidelines"
+        :id="guideline.id"
+        :key="guideline.id"
+      >
+        <h2>{{ guideline.heading }}</h2>
+        <p>{{ guideline.description }}</p>
+
+        <ul v-if="guideline.successCriteria && guideline.successCriteria.length">
+          <li v-for="sc in guideline.successCriteria" :key="sc.id" style="margin-bottom: 0.5rem;">
+            <strong>{{ sc.shortLabel }}</strong> — {{ sc.brief }}<br />
+            <a :href="'detail.html?sc=' + sc.id">
+              <button style="margin-top: 4px;">See details</button>
+            </a>
+          </li>
+        </ul>
+
+        <p v-else class="placeholder">
+          Success criteria will be added for this guideline.
+        </p>
+      </section>
+    </section>
+
+    <section class="page" v-else>
+      <p>Unknown principle. <a href="index.html">Back to start</a></p>
+    </section>
+  </main>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script type="module" src="./js/app-index.js"></script>
+</body>
+</html>
