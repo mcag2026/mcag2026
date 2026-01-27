@@ -183,6 +183,14 @@ p {
   margin-bottom: 4px;
 }
 
+.site-meta {
+  margin: 2rem 0 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
 /* Collapsible headers */
 .card-toggle {
   width: 100%;
