@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MCAG 2026 – Success Criterion Detail</title>
+  <title>MCAG 2026 – Issue Type Detail</title>
   <link rel="stylesheet" href="./styles.css" />
       <link
     rel="stylesheet"
@@ -11,6 +11,27 @@
 </head>
 <body>
 <div id="app" class="app">
+  <!-- Sidebar -->
+  <aside
+    class="sidebar"
+    aria-label="Table of contents"
+    v-if="tocSections && tocSections.length"
+  >
+    <div class="sidebar-header">Table of Contents</div>
+    <ul class="toc">
+      <li v-for="item in tocSections" :key="item.id">
+        <a
+          class="toc-link"
+          :class="{ active: activeSectionId === item.id }"
+          :href="'#' + item.id"
+          @click.prevent="goSection(item.id)"
+        >
+          {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </aside>
+
   <main class="content-wrapper">
     <section class="page" v-if="sc">
       <p style="margin-bottom: 1rem;">
@@ -24,12 +45,12 @@
       </p>
 
       <!-- Definition -->
-      <h2>Definition</h2>
+      <h2 id="definition" tabindex="-1">Definition</h2>
       <p v-if="sc.definition">{{ sc.definition }}</p>
       <p v-else class="placeholder">Definition coming soon.</p>
 
       <!-- WCAG Reference -->
-      <h2>WCAG Reference</h2>
+      <h2 id="wcag-reference" tabindex="-1">WCAG Reference</h2>
       <ul v-if="sc.references && sc.references.length">
         <li v-for="ref in sc.references" :key="ref.label">
           <a
@@ -46,7 +67,7 @@
       <p v-else class="placeholder">WCAG references coming soon.</p>
 
       <!-- Issue Example -->
-      <h2>Issue Example</h2>
+      <h2 id="issue-example" tabindex="-1">Issue Example</h2>
       <div v-if="sc.issueExample">
         <div
           v-if="sc.issueExample.screenshotUrl"
@@ -74,7 +95,7 @@
       <p v-else class="placeholder">Issue example coming soon.</p>
 
     <!-- Fix Suggestions -->
-    <h2>Android Fix Suggestion</h2>
+    <h2 id="android-fix-suggestion" tabindex="-1">Android Fix Suggestion</h2>
     <div
       v-if="sc.fixSuggestions && sc.fixSuggestions.length"
       class="fix-suggestions"
@@ -180,7 +201,7 @@
     <p v-else class="placeholder">Fix suggestions coming soon.</p>
 
       <!-- Resources -->
-      <h2>Resources</h2>
+      <h2 id="resources" tabindex="-1">Resources</h2>
       <div
         class="card"
         v-if="sc.resources && sc.resources.length"
@@ -190,15 +211,8 @@
           :key="resource.id"
           class="card-block"
         >
-          <button
-            class="card-toggle"
-            type="button"
-            :aria-expanded="resource.open ? 'true' : 'false'"
-            @click="resource.open = !resource.open"
-          >
-            {{ resource.title }}
-          </button>
-          <div class="card-section" v-show="resource.open">
+          <h3>{{ resource.title }}</h3>
+          <div class="card-section">
             <ul>
               <li v-for="(item, idx) in resource.items" :key="idx">
                 {{ item }}
@@ -213,7 +227,7 @@
     </section>
 
     <section v-else class="page">
-      <p>Error: Success Criterion not found.</p>
+      <p>Error: Issue Type not found.</p>
       <a href="index.html">Return to overview</a>
     </section>
     <footer class="site-meta" aria-label="Document metadata">
