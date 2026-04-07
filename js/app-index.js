@@ -13,6 +13,17 @@ createApp({
       return (hash || "").replace(/^#/, "");
     }
 
+    function getAllNavigableIds() {
+      const ids = [];
+      for (const sec of sections.value || []) {
+        if (sec?.id) ids.push(sec.id);
+        for (const guideline of sec?.guidelines || []) {
+          if (guideline?.id && sec?.id) ids.push(`${sec.id}--${guideline.id}`);
+        }
+      }
+      return ids;
+    }
+
     function scrollAndFocusSection(id, { behavior = "smooth" } = {}) {
       if (!id) return;
 
@@ -44,10 +55,8 @@ createApp({
     function handleHashChange() {
       const idFromHash = normalizeHash(window.location.hash);
 
-      const validId =
-        sections.value.find((s) => s.id === idFromHash)?.id ||
-        sections.value[0]?.id ||
-        null;
+      const allIds = getAllNavigableIds();
+      const validId = allIds.includes(idFromHash) ? idFromHash : sections.value[0]?.id || null;
 
       activeSectionId.value = validId;
 

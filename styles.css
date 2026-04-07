@@ -86,7 +86,7 @@ body {
 
 .toc .toc-link.active {
   background: rgba(0, 115, 230, 0.15);
-  color: var(--accent);
+  color: var(--text-main);
   font-weight: 600;
 }
 
@@ -100,7 +100,7 @@ body {
   margin-bottom: calc(2px * var(--space-scale));
 }
 
-.toc-sublist button {
+.toc-sublist .toc-link {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
@@ -126,32 +126,33 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: calc(150% * var(--font-scale));
   margin-bottom: calc(4px * var(--space-scale));
 }
 
 h2 {
-  font-size: 1.25rem;
+  font-size: calc(110% * var(--font-scale));
   margin-top: calc(30px * var(--space-scale));
   margin-bottom: calc(6px * var(--space-scale));
 }
 
 h3 {
-  font-size: 1.05rem;
+  font-size: calc(100% * var(--font-scale));
   margin-top: calc(18px * var(--space-scale));
   margin-bottom: calc(4px * var(--space-scale));
 }
 
 .section-lead {
-  font-size: 0.95rem;
+  font-size: calc(90% * var(--font-scale));
   color: var(--text-muted);
-  margin-bottom: calc(18px * var(--space-scale));
+  margin-bottom: calc(22px * var(--space-scale));
 }
 
 p {
-  font-size: 0.92rem;
+  font-size: calc(90% * var(--font-scale));
   line-height: 1.45;
   margin: calc(4px * var(--space-scale)) 0 calc(10px * var(--space-scale));
+  margin-bottom: calc(18px * var(--space-scale));
 }
 
 .reference {
@@ -176,7 +177,7 @@ p {
   padding: calc(10px * var(--space-scale)) calc(12px * var(--space-scale));
   margin: calc(10px * var(--space-scale)) 0 calc(14px * var(--space-scale));
   background: #fafafa;
-  font-size: 0.88rem;
+  font-size: calc(90% * var(--font-scale));
 }
 
 .card-block {
@@ -193,7 +194,7 @@ p {
 }
 
 .card-section li {
-  margin-bottom: calc(4px * var(--space-scale));
+  margin-bottom: calc(14px * var(--space-scale));
 }
 
 .site-meta {
