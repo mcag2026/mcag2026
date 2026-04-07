@@ -1,4 +1,8 @@
 :root {
+  /* Global scaling knobs */
+  --font-scale: 1.2; /* +20% */
+  --space-scale: 2.0; /* large whitespace increase */
+
   --border-color: #d0d0d0;
   --sidebar-bg: #f7f7f7;
   --content-bg: #ffffff;
@@ -11,6 +15,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100% * var(--font-scale));
 }
 
 body {
@@ -30,7 +38,7 @@ body {
   width: 260px;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border-color);
-  padding: 16px 12px;
+  padding: calc(16px * var(--space-scale)) calc(12px * var(--space-scale));
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -41,7 +49,7 @@ body {
 
 .sidebar-header {
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: calc(16px * var(--space-scale));
   font-size: 1rem;
 }
 
@@ -53,14 +61,14 @@ body {
 }
 
 .toc > li {
-  margin-bottom: 6px;
+  margin-bottom: calc(6px * var(--space-scale));
 }
 
 .toc .toc-link {
   display: block;
   border: none;
   background: none;
-  padding: 4px 6px;
+  padding: calc(4px * var(--space-scale)) calc(6px * var(--space-scale));
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -85,11 +93,11 @@ body {
 .toc-sublist {
   list-style: none;
   padding-left: 16px;
-  margin: 4px 0 6px;
+  margin: calc(4px * var(--space-scale)) 0 calc(6px * var(--space-scale));
 }
 
 .toc-sublist li {
-  margin-bottom: 2px;
+  margin-bottom: calc(2px * var(--space-scale));
 }
 
 .toc-sublist button {
@@ -100,16 +108,16 @@ body {
 /* Content area */
 .content-wrapper {
   flex: 1;
-  padding: 24px 32px;
+  padding: calc(24px * var(--space-scale)) calc(32px * var(--space-scale));
 }
 
 .page {
   max-width: 900px;
-  margin: 0 auto 48px;
+  margin: 0 auto calc(48px * var(--space-scale));
   background: var(--content-bg);
   border-radius: 8px;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
-  padding: 24px 32px 40px;
+  padding: calc(24px * var(--space-scale)) calc(32px * var(--space-scale)) calc(40px * var(--space-scale));
 }
 
 h1, h2, h3 {
@@ -119,37 +127,37 @@ h1, h2, h3 {
 
 h1 {
   font-size: 1.6rem;
-  margin-bottom: 4px;
+  margin-bottom: calc(4px * var(--space-scale));
 }
 
 h2 {
   font-size: 1.25rem;
-  margin-top: 24px;
-  margin-bottom: 6px;
+  margin-top: calc(30px * var(--space-scale));
+  margin-bottom: calc(6px * var(--space-scale));
 }
 
 h3 {
   font-size: 1.05rem;
-  margin-top: 18px;
-  margin-bottom: 4px;
+  margin-top: calc(18px * var(--space-scale));
+  margin-bottom: calc(4px * var(--space-scale));
 }
 
 .section-lead {
   font-size: 0.95rem;
   color: var(--text-muted);
-  margin-bottom: 18px;
+  margin-bottom: calc(18px * var(--space-scale));
 }
 
 p {
   font-size: 0.92rem;
   line-height: 1.45;
-  margin: 4px 0 10px;
+  margin: calc(4px * var(--space-scale)) 0 calc(10px * var(--space-scale));
 }
 
 .reference {
   font-size: 0.85rem;
-  margin-top: 6px;
-  margin-bottom: 10px;
+  margin-top: calc(6px * var(--space-scale));
+  margin-bottom: calc(10px * var(--space-scale));
 }
 
 .reference a {
@@ -165,32 +173,32 @@ p {
 .card {
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  padding: 10px 12px;
-  margin: 10px 0 14px;
+  padding: calc(10px * var(--space-scale)) calc(12px * var(--space-scale));
+  margin: calc(10px * var(--space-scale)) 0 calc(14px * var(--space-scale));
   background: #fafafa;
   font-size: 0.88rem;
 }
 
 .card-block {
-  margin-bottom: 8px;
+  margin-bottom: calc(8px * var(--space-scale));
 }
 
 .card-section {
-  margin: 4px 0 10px;
+  margin: calc(4px * var(--space-scale)) 0 calc(10px * var(--space-scale));
 }
 
 .card-section ul {
   padding-left: 18px;
-  margin: 4px 0;
+  margin: calc(4px * var(--space-scale)) 0;
 }
 
 .card-section li {
-  margin-bottom: 4px;
+  margin-bottom: calc(4px * var(--space-scale));
 }
 
 .site-meta {
-  margin: 2rem 0 1rem;
-  padding-top: 1rem;
+  margin: calc(2rem * var(--space-scale)) 0 calc(1rem * var(--space-scale));
+  padding-top: calc(1rem * var(--space-scale));
   border-top: 1px solid #ddd;
   font-size: 0.95rem;
   opacity: 0.9;
@@ -203,7 +211,7 @@ p {
   text-align: left;
   border: none;
   background: none;
-  padding: 4px 0;
+  padding: calc(4px * var(--space-scale)) 0;
   font: inherit;
   font-weight: 600;
   display: flex;
@@ -231,7 +239,7 @@ p {
 .placeholder {
   color: var(--text-muted);
   font-size: 0.95rem;
-  margin-top: 8px;
+  margin-top: calc(8px * var(--space-scale));
 }
 
 @media (max-width: 800px) {
@@ -250,8 +258,8 @@ p {
 .fix-block {
   border: 2px solid #0648db;          /* stronger border */
   border-radius: 10px;
-  padding: 16px 20px;
-  margin: 24px 0;
+  padding: calc(16px * var(--space-scale)) calc(20px * var(--space-scale));
+  margin: calc(24px * var(--space-scale)) 0;
   background: #f5f7ff;                 /* light bluish background */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -264,16 +272,16 @@ p {
 .fix-variant {
   border: 1px solid #cfd4e6;           /* clearer inner border */
   border-radius: 8px;
-  padding: 12px 14px;
-  margin-top: 12px;
+  padding: calc(12px * var(--space-scale)) calc(14px * var(--space-scale));
+  margin-top: calc(12px * var(--space-scale));
   background: #ffffff;                 /* white card inside blue block */
 }
 
 /* Code blocks */
 .code-block {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding: 8px 10px;
+  margin-top: calc(8px * var(--space-scale));
+  margin-bottom: calc(8px * var(--space-scale));
+  padding: calc(8px * var(--space-scale)) calc(10px * var(--space-scale));
   border-radius: 6px;
   background: #1e1e1e; /* will be overridden by highlight.js theme, but keeps a base */
   overflow-x: auto;
@@ -290,7 +298,17 @@ p {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 2px;
-  margin-bottom: 6px;
+  margin-top: calc(2px * var(--space-scale));
+  margin-bottom: calc(6px * var(--space-scale));
   color: #777;
+}
+
+/* Success criteria list spacing (replaces inline styles in index.html) */
+.sc-item {
+  margin-bottom: calc(0.5rem * var(--space-scale));
+}
+
+.sc-details-button {
+  margin-top: calc(4px * var(--space-scale));
+  font-size: 0.8rem;
 }

@@ -58,10 +58,10 @@
           <p>{{ guideline.description }}</p>
 
           <ul v-if="guideline.successCriteria && guideline.successCriteria.length">
-            <li v-for="sc in guideline.successCriteria" :key="sc.id" style="margin-bottom: 0.5rem;">
+            <li v-for="sc in guideline.successCriteria" :key="sc.id" class="sc-item">
               <strong>{{ sc.shortLabel }}</strong> — {{ sc.brief }}<br />
               <a :href="'detail.html?sc=' + sc.id">
-                <button style="margin-top: 4px;">See details</button>
+                <button class="sc-details-button">See details</button>
               </a>
             </li>
           </ul>
