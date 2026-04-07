@@ -467,7 +467,7 @@ Provided you include in res/values/strings.xml:
     ]
   },
   {
-    id: "Robust",
+    id: "robust",
     navLabel: "4. Robust",
     heading: "4. Robust",
     intro: "Screen reader users must be able to interpret all important content via screen reader.",

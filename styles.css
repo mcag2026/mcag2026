@@ -33,6 +33,10 @@ body {
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -52,7 +56,8 @@ body {
   margin-bottom: 6px;
 }
 
-.toc button {
+.toc .toc-link {
+  display: block;
   border: none;
   background: none;
   padding: 4px 6px;
@@ -62,15 +67,16 @@ body {
   font: inherit;
   color: var(--text-main);
   border-radius: 4px;
+  text-decoration: none;
 }
 
-.toc button:hover,
-.toc button:focus-visible {
+.toc .toc-link:hover,
+.toc .toc-link:focus-visible {
   outline: none;
   background: rgba(0, 115, 230, 0.08);
 }
 
-.toc button.active {
+.toc .toc-link.active {
   background: rgba(0, 115, 230, 0.15);
   color: var(--accent);
   font-weight: 600;
@@ -95,7 +101,6 @@ body {
 .content-wrapper {
   flex: 1;
   padding: 24px 32px;
-  overflow-y: auto;
 }
 
 .page {
