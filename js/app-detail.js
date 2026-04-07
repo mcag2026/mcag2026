@@ -1,13 +1,38 @@
 // js/app-detail.js
 import { sections } from "./data.js";
+import { resourceEntries, resourceGroups } from "./data/resources.js";
 
-const { createApp, ref, onMounted, onBeforeUnmount, nextTick } = Vue;
+const { createApp, ref, computed, onMounted, onBeforeUnmount, nextTick } = Vue;
+
+function buildResolvedResourceSections(type) {
+  const ids = type?.resourceGroups;
+  if (!ids?.length) return [];
+
+  return ids
+    .map((groupId) => {
+      const group = resourceGroups[groupId];
+      if (!group) return null;
+
+      const items = (group.resourceIds || [])
+        .map((rid) => resourceEntries[rid])
+        .filter(Boolean);
+
+      if (!items.length) return null;
+
+      return {
+        id: group.id,
+        title: group.title,
+        items,
+      };
+    })
+    .filter(Boolean);
+}
 
 createApp({
   setup() {
     const section = ref(null);
     const guideline = ref(null);
-    const sc = ref(null);
+    const issueType = ref(null);
 
     const tocSections = [
       { id: "definition", label: "Definition" },
@@ -19,26 +44,29 @@ createApp({
 
     const activeSectionId = ref(tocSections[0]?.id ?? null);
 
-    // Read sc id from ?sc=...
+    // Read issue type id from query params.
     const params = new URLSearchParams(window.location.search);
-    const scId = params.get("sc");
+    // Backwards-compat: keep ?sc= working
+    const issueTypeId = params.get("issueType") || params.get("sc");
 
-    if (scId) {
+    if (issueTypeId) {
       for (const sec of sections) {
         for (const gl of sec.guidelines || []) {
-          const match = (gl.successCriteria || []).find(
-            (item) => item.id === scId
-          );
+          const match = (gl.issueTypes || []).find((item) => item.id === issueTypeId);
           if (match) {
             section.value = sec;
             guideline.value = gl;
-            sc.value = match;
+            issueType.value = match;
             break;
           }
         }
-        if (sc.value) break;
+        if (issueType.value) break;
       }
     }
+
+    const resolvedResourceSections = computed(() =>
+      buildResolvedResourceSections(issueType.value)
+    );
 
     // Helper: choose highlight.js language class
     function codeLanguage(snippet) {
@@ -116,7 +144,8 @@ createApp({
     return {
       section,
       guideline,
-      sc,
+      issueType,
+      resolvedResourceSections,
       codeLanguage,
       tocSections,
       activeSectionId,

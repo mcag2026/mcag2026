@@ -33,12 +33,12 @@
   </aside>
 
   <main class="content-wrapper">
-    <section class="page" v-if="sc">
+    <section class="page" v-if="issueType">
       <p style="margin-bottom: 1rem;">
         <a href="index.html">← Back to overview</a>
       </p>
 
-      <h1>{{ sc.title }}</h1>
+      <h1>{{ issueType.title }}</h1>
 
       <p class="section-lead" v-if="guideline && section">
         {{ guideline.heading }} · {{ section.navLabel }}
@@ -46,13 +46,13 @@
 
       <!-- Definition -->
       <h2 id="definition" tabindex="-1">Definition</h2>
-      <p v-if="sc.definition">{{ sc.definition }}</p>
+      <p v-if="issueType.definition || issueType.brief ">{{ issueType.definition || issueType.brief }}</p>
       <p v-else class="placeholder">Definition coming soon.</p>
 
       <!-- WCAG Reference -->
       <h2 id="wcag-reference" tabindex="-1">WCAG Reference</h2>
-      <ul v-if="sc.references && sc.references.length">
-        <li v-for="ref in sc.references" :key="ref.label">
+      <ul v-if="issueType.references && issueType.references.length">
+        <li v-for="ref in issueType.references" :key="ref.label">
           <a
             v-if="ref.url"
             :href="ref.url"
@@ -68,25 +68,25 @@
 
       <!-- Issue Example -->
       <h2 id="issue-example" tabindex="-1">Issue Example</h2>
-      <div v-if="sc.issueExample">
+      <div v-if="issueType.issueExample">
         <div
-          v-if="sc.issueExample.screenshotUrl"
+          v-if="issueType.issueExample.screenshotUrl"
           style="margin-bottom: 0.75rem;"
         >
           <img
-            :src="sc.issueExample.screenshotUrl"
+            :src="issueType.issueExample.screenshotUrl"
             alt=""
             style="max-width: 100%; border: 1px solid #ccc; border-radius: 4px;"
           />
         </div>
         <p
-          v-for="(para, idx) in sc.issueExample.description || []"
+          v-for="(para, idx) in issueType.issueExample.description || []"
           :key="'issue-para-' + idx"
         >
           {{ para }}
         </p>
         <p
-          v-if="!sc.issueExample.description || !sc.issueExample.description.length"
+          v-if="!issueType.issueExample.description || !issueType.issueExample.description.length"
           class="placeholder"
         >
           Issue description coming soon.
@@ -97,11 +97,11 @@
     <!-- Fix Suggestions -->
     <h2 id="android-fix-suggestion" tabindex="-1">Android Fix Suggestion</h2>
     <div
-      v-if="sc.fixSuggestions && sc.fixSuggestions.length"
+      v-if="issueType.fixSuggestions && issueType.fixSuggestions.length"
       class="fix-suggestions"
     >
       <article
-        v-for="(fix, fixIndex) in sc.fixSuggestions"
+        v-for="(fix, fixIndex) in issueType.fixSuggestions"
         :key="fix.id || fix.title"
         class="fix-block"
       >
@@ -204,18 +204,31 @@
       <h2 id="resources" tabindex="-1">Resources</h2>
       <div
         class="card"
-        v-if="sc.resources && sc.resources.length"
+        v-if="resolvedResourceSections && resolvedResourceSections.length"
       >
         <div
-          v-for="resource in sc.resources"
-          :key="resource.id"
+          v-for="group in resolvedResourceSections"
+          :key="group.id"
           class="card-block"
         >
-          <h3>{{ resource.title }}</h3>
+          <h3>{{ group.title }}</h3>
           <div class="card-section">
-            <ul>
-              <li v-for="(item, idx) in resource.items" :key="idx">
-                {{ item }}
+            <ul class="resource-list">
+              <li
+                v-for="item in group.items"
+                :key="item.id"
+                class="resource-row"
+              >
+                <span class="resource-title">{{ item.title }}</span>
+                <a
+                  v-if="item.url"
+                  class="resource-read-button"
+                  :href="item.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read
+                </a>
               </li>
             </ul>
           </div>

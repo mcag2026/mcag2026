@@ -41,7 +41,7 @@
     <section class="page">
       <h1>Mobile Content Accessibility Guidelines (MCAG)</h1>
       <p class="section-lead">
-        Browse principles, guidelines, and success criteria. Use the table of contents to jump to a principle.
+        Browse principles, guidelines, and issue types. Use the table of contents to jump to a principle.
       </p>
 
       <section
@@ -70,17 +70,17 @@
           <h3>{{ guideline.heading }}</h3>
           <p>{{ guideline.description }}</p>
 
-          <ul v-if="guideline.successCriteria && guideline.successCriteria.length">
-            <li v-for="sc in guideline.successCriteria" :key="sc.id" class="sc-item">
-              <strong>{{ sc.shortLabel }}</strong> — {{ sc.brief }}<br />
-              <a :href="'detail.html?sc=' + sc.id">
-                <button class="sc-details-button">See details</button>
+          <ul v-if="guideline.issueTypes && guideline.issueTypes.length">
+            <li v-for="issueType in guideline.issueTypes" :key="issueType.id" class="issue-type-item">
+              <strong>{{ issueType.shortLabel }}</strong> — {{ issueType.brief }}<br />
+              <a :href="'detail.html?issueType=' + issueType.id">
+                <button class="issue-type-details-button">See details</button>
               </a>
             </li>
           </ul>
 
           <p v-else class="placeholder">
-            Success criteria will be added for this guideline.
+            Issue types will be added for this guideline.
           </p>
         </section>
       </section>
