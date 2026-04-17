@@ -219,7 +219,12 @@
                 :key="item.id"
                 class="resource-row"
               >
-                <span class="resource-title">{{ item.title }}</span>
+                <span class="resource-title">
+                  <span class="resource-name">{{ item.name }}</span>
+                  <span v-if="item.citation" class="resource-citation">
+                    {{ item.citation }}
+                  </span>
+                </span>
                 <a
                   v-if="item.url"
                   class="resource-read-button"

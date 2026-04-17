@@ -305,6 +305,17 @@ p {
   line-height: 1.45;
 }
 
+.resource-name {
+  display: block;
+}
+
+.resource-citation {
+  display: block;
+  margin-top: calc(2px * var(--space-scale));
+  color: #666;
+  font-size: 0.9em;
+}
+
 .resource-read-button {
   flex-shrink: 0;
   display: inline-block;
