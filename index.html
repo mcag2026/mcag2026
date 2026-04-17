@@ -10,70 +10,83 @@
   <!-- Sidebar -->
   <aside class="sidebar" aria-label="Table of contents">
     <div class="sidebar-header">Table of Contents</div>
-<ul class="toc">
-  <li v-for="sec in sections" :key="sec.id">
-    <button
-      class="toc-link"
-      :class="{ active: sec.id === section.id }"
-      @click="goSection(sec.id)"
-    >
-      {{ sec.navLabel }}
-    </button>
-
-    <ul
-      class="toc-sublist"
-      v-if="sec.id === section.id && section.guidelines && section.guidelines.length"
-    >
-      <li v-for="guideline in section.guidelines" :key="guideline.id">
+    <ul class="toc">
+      <li v-for="sec in sections" :key="sec.id">
         <a
-          class="toc-sublink"
-          :href="'#' + guideline.id"
+          class="toc-link"
+          :class="{ active: activeSectionId === sec.id || (activeSectionId || '').startsWith(sec.id + '--') }"
+          :href="'#' + sec.id"
+          @click.prevent="goSection(sec.id)"
         >
-          {{ guideline.navLabel }}
+          {{ sec.navLabel }}
         </a>
+        <ul class="toc-sublist" v-if="sec.guidelines && sec.guidelines.length">
+          <li v-for="guideline in sec.guidelines" :key="sec.id + '--' + guideline.id">
+            <a
+              class="toc-link"
+              :class="{ active: activeSectionId === (sec.id + '--' + guideline.id) }"
+              :href="'#' + (sec.id + '--' + guideline.id)"
+              @click.prevent="goSection(sec.id + '--' + guideline.id)"
+            >
+              {{ guideline.heading }}
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
-  </li>
-</ul>
   </aside>
 
   <!-- Main content -->
   <main class="content-wrapper">
-    <section class="page" v-if="section">
-      <h1>{{ section.heading }}</h1>
-      <p class="section-lead" v-if="section.intro">
-        {{ section.intro }}
+    <section class="page">
+      <h1>Mobile Content Accessibility Guidelines (MCAG)</h1>
+      <p class="section-lead">
+        Browse principles, guidelines, and issue types. Use the table of contents to jump to a principle.
       </p>
 
-      <!-- Guidelines within the active principle -->
       <section
-        v-for="guideline in section.guidelines"
-        :id="guideline.id"
-        :key="guideline.id"
+        v-for="sec in sections"
+        :key="sec.id"
+        class="principle"
       >
-        <h2>{{ guideline.heading }}</h2>
-        <p>{{ guideline.description }}</p>
+        <h2
+          class="principle-heading"
+          :id="sec.id"
+          tabindex="-1"
+        >
+          {{ sec.heading }}
+        </h2>
 
-        <ul v-if="guideline.successCriteria && guideline.successCriteria.length">
-          <li v-for="sc in guideline.successCriteria" :key="sc.id" style="margin-bottom: 0.5rem;">
-            <strong>{{ sc.shortLabel }}</strong> — {{ sc.brief }}<br />
-            <a :href="'detail.html?sc=' + sc.id">
-              <button style="margin-top: 4px;">See details</button>
-            </a>
-          </li>
-        </ul>
-
-        <p v-else class="placeholder">
-          Success criteria will be added for this guideline.
+        <p class="section-lead" v-if="sec.intro">
+          {{ sec.intro }}
         </p>
+
+        <section
+          v-for="guideline in sec.guidelines"
+          :id="sec.id + '--' + guideline.id"
+          :key="sec.id + '-' + guideline.id"
+          tabindex="-1"
+        >
+          <h3>{{ guideline.heading }}</h3>
+          <p>{{ guideline.description }}</p>
+
+          <ul v-if="guideline.issueTypes && guideline.issueTypes.length">
+            <li v-for="issueType in guideline.issueTypes" :key="issueType.id" class="issue-type-item">
+              <strong>{{ issueType.shortLabel }}</strong> — {{ issueType.brief }}<br />
+              <a :href="'detail.html?issueType=' + issueType.id">
+                <button class="issue-type-details-button">See details</button>
+              </a>
+            </li>
+          </ul>
+
+          <p v-else class="placeholder">
+            Issue types will be added for this guideline.
+          </p>
+        </section>
       </section>
     </section>
-
-    <section class="page" v-else>
-      <p>Unknown principle. <a href="index.html">Back to start</a></p>
-    </section>
     <footer class="site-meta" aria-label="Document metadata">
-      <p><strong>MCAG</strong> — Version 1.0 · Last edited: January 26, 2026</p>
+      <p><strong>MCAG</strong> — Version 1.1 · Last edited: April 17, 2026</p>
     </footer>
   </main>
 </div>

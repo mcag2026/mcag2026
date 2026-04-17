@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MCAG 2026 – Success Criterion Detail</title>
+  <title>MCAG 2026 – Issue Type Detail</title>
   <link rel="stylesheet" href="./styles.css" />
       <link
     rel="stylesheet"
@@ -11,27 +11,48 @@
 </head>
 <body>
 <div id="app" class="app">
+  <!-- Sidebar -->
+  <aside
+    class="sidebar"
+    aria-label="Table of contents"
+    v-if="tocSections && tocSections.length"
+  >
+    <div class="sidebar-header">Table of Contents</div>
+    <ul class="toc">
+      <li v-for="item in tocSections" :key="item.id">
+        <a
+          class="toc-link"
+          :class="{ active: activeSectionId === item.id }"
+          :href="'#' + item.id"
+          @click.prevent="goSection(item.id)"
+        >
+          {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </aside>
+
   <main class="content-wrapper">
-    <section class="page" v-if="sc">
+    <section class="page" v-if="issueType">
       <p style="margin-bottom: 1rem;">
         <a href="index.html">← Back to overview</a>
       </p>
 
-      <h1>{{ sc.title }}</h1>
+      <h1>{{ issueType.title }}</h1>
 
       <p class="section-lead" v-if="guideline && section">
         {{ guideline.heading }} · {{ section.navLabel }}
       </p>
 
       <!-- Definition -->
-      <h2>Definition</h2>
-      <p v-if="sc.definition">{{ sc.definition }}</p>
+      <h2 id="definition" tabindex="-1">Definition</h2>
+      <p v-if="issueType.definition || issueType.brief ">{{ issueType.definition || issueType.brief }}</p>
       <p v-else class="placeholder">Definition coming soon.</p>
 
       <!-- WCAG Reference -->
-      <h2>WCAG Reference</h2>
-      <ul v-if="sc.references && sc.references.length">
-        <li v-for="ref in sc.references" :key="ref.label">
+      <h2 id="wcag-reference" tabindex="-1">WCAG Reference</h2>
+      <ul v-if="issueType.references && issueType.references.length">
+        <li v-for="ref in issueType.references" :key="ref.label">
           <a
             v-if="ref.url"
             :href="ref.url"
@@ -46,26 +67,26 @@
       <p v-else class="placeholder">WCAG references coming soon.</p>
 
       <!-- Issue Example -->
-      <h2>Issue Example</h2>
-      <div v-if="sc.issueExample">
+      <h2 id="issue-example" tabindex="-1">Issue Example</h2>
+      <div v-if="issueType.issueExample">
         <div
-          v-if="sc.issueExample.screenshotUrl"
+          v-if="issueType.issueExample.screenshotUrl"
           style="margin-bottom: 0.75rem;"
         >
           <img
-            :src="sc.issueExample.screenshotUrl"
+            :src="issueType.issueExample.screenshotUrl"
             alt=""
             style="max-width: 100%; border: 1px solid #ccc; border-radius: 4px;"
           />
         </div>
         <p
-          v-for="(para, idx) in sc.issueExample.description || []"
+          v-for="(para, idx) in issueType.issueExample.description || []"
           :key="'issue-para-' + idx"
         >
           {{ para }}
         </p>
         <p
-          v-if="!sc.issueExample.description || !sc.issueExample.description.length"
+          v-if="!issueType.issueExample.description || !issueType.issueExample.description.length"
           class="placeholder"
         >
           Issue description coming soon.
@@ -74,13 +95,13 @@
       <p v-else class="placeholder">Issue example coming soon.</p>
 
     <!-- Fix Suggestions -->
-    <h2>Android Fix Suggestion</h2>
+    <h2 id="android-fix-suggestion" tabindex="-1">Android Fix Suggestion</h2>
     <div
-      v-if="sc.fixSuggestions && sc.fixSuggestions.length"
+      v-if="issueType.fixSuggestions && issueType.fixSuggestions.length"
       class="fix-suggestions"
     >
       <article
-        v-for="(fix, fixIndex) in sc.fixSuggestions"
+        v-for="(fix, fixIndex) in issueType.fixSuggestions"
         :key="fix.id || fix.title"
         class="fix-block"
       >
@@ -180,28 +201,39 @@
     <p v-else class="placeholder">Fix suggestions coming soon.</p>
 
       <!-- Resources -->
-      <h2>Resources</h2>
+      <h2 id="resources" tabindex="-1">Resources</h2>
       <div
         class="card"
-        v-if="sc.resources && sc.resources.length"
+        v-if="resolvedResourceSections && resolvedResourceSections.length"
       >
         <div
-          v-for="resource in sc.resources"
-          :key="resource.id"
+          v-for="group in resolvedResourceSections"
+          :key="group.id"
           class="card-block"
         >
-          <button
-            class="card-toggle"
-            type="button"
-            :aria-expanded="resource.open ? 'true' : 'false'"
-            @click="resource.open = !resource.open"
-          >
-            {{ resource.title }}
-          </button>
-          <div class="card-section" v-show="resource.open">
-            <ul>
-              <li v-for="(item, idx) in resource.items" :key="idx">
-                {{ item }}
+          <h3>{{ group.title }}</h3>
+          <div class="card-section">
+            <ul class="resource-list">
+              <li
+                v-for="item in group.items"
+                :key="item.id"
+                class="resource-row"
+              >
+                <span class="resource-title">
+                  <span class="resource-name">{{ item.name }}</span>
+                  <span v-if="item.citation" class="resource-citation">
+                    {{ item.citation }}
+                  </span>
+                </span>
+                <a
+                  v-if="item.url"
+                  class="resource-read-button"
+                  :href="item.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read
+                </a>
               </li>
             </ul>
           </div>
@@ -213,7 +245,7 @@
     </section>
 
     <section v-else class="page">
-      <p>Error: Success Criterion not found.</p>
+      <p>Error: Issue Type not found.</p>
       <a href="index.html">Return to overview</a>
     </section>
     <footer class="site-meta" aria-label="Document metadata">
